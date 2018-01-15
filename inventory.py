@@ -6,6 +6,7 @@ Main module for the Flaming Blades Inventory
 
 import item
 import sys
+import time
 
 # add a single item, taking user input for each property
 def addItem():
@@ -46,12 +47,12 @@ def listItems():
 def main():
 	exStat = False
 	
-	print("Welcome to the Oberlin College Flaming Blades Armory Inventory System (OCFBAIS)!")
+	print("\nWelcome to the Oberlin College Flaming Blades Armory Inventory System (OCFBAIS)!\n")
 	
 	# open and load most recent inventory file
 	
 	while not exStat:	# user input loop
-		print("Options:\n1 - Add an Item\n2 - Remove an Item\n3 - Add a batch of Items\n4 - Remove a batch of Items\n5 - Search for an Item(s)\n6 - List Items\n7 - Save current inventory\n8 - Quit")	# detail available options for user
+		print("\nOptions:\n1 - Add an Item\n2 - Remove an Item\n3 - Add a batch of Items\n4 - Remove a batch of Items\n5 - Search for an Item(s)\n6 - List Items\n7 - Save current inventory\n8 - Quit")	# detail available options for user
 		c = int(input("\nPlease choose an option: "))
 		if c == 1:	# add single item
 			pass
@@ -76,7 +77,8 @@ def main():
 			else:
 				exStat = True
 		else:
-			print("Sorry, that is not a valid option. Please try again.")
+			print("\nSorry, that is not a valid option. Please try again.")
+			time.sleep(1)
 			
 	print("Goodbye!")
 	exit(0)
