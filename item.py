@@ -242,16 +242,16 @@ class Weapon(Item):
 			
 """
 params:
-str name
-int quantity
-str comments (default to empty string)
+str name: name or type of item or tool or etc.
+int quantity (defaults to 1): amount of specific item, if more than 1
+str comments (default to empty string): any comments about the specific item (i.e. condition notes, location in armory, etc.)
 
 Function:
 Simple Class for miscellaneous other items found around the armory which it may be useful to catalog
 Contains a __str__ function for easy display with several options.
 """
 class MiscItem:
-	def __init__(self, name, quantity, comments=""):
+	def __init__(self, name, quantity=1, comments=""):
 		self.name = name
 		self.quantity = quantity
 		self.comments = comments
