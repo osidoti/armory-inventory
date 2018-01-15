@@ -36,11 +36,11 @@ areComments: returns boolean representation of presence of comments
 """
 class Item:
 	def __init__(self, idNum, idYear, article, condition, hand=None, fie=False, comments="", user=None):
-		self.idNum = int(idNum)
-		self.idYear = int(idYear)
+		self.idNum = idNum
+		self.idYear = idYear
 		self.article = article
 		if article[0] == "M" or article[0] == "L":
-			self.idLetter = article[0] + article[5]
+			self.idLetter = article[0] + article[6]
 		else:
 			self.idLetter = article[0]
 		self.user = user
@@ -208,7 +208,7 @@ str condition: see superclass
 str hand: Note which hand the weapon is set up for (left or right)
 str bellCond: The condition of the bell guard
 str grip: The type of grip placed on the weapon
-str wireCond (default to "N/A": The condition of the wire laid in the blade (if applicable)
+str wireCond: The condition of the wire laid in the blade (if applicable)
 bool fie (default to False): see superclass
 str comments (default to empty string): see superclass
 str user (default to None): see superclass
@@ -230,7 +230,7 @@ __str__(opt): converts item and properties to a printable format for a print sta
 	-(opt=11) inline print, with comments
 """
 class Weapon(Item):
-	def __init__(self, idNum, idYear, article, condition, hand, bellCond, grip, wireCond="N/A", fie=False, comments="", user=None):
+	def __init__(self, idNum, idYear, article, condition, hand, bellCond, grip, wireCond, fie=False, comments="", user=None):
 		Item.__init__(idNum, idYear, article, condition, hand, fie, comments, user)
 		self.bellCond = bellCond
 		self.wireCond = wireCond
