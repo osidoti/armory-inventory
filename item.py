@@ -106,8 +106,8 @@ class Clothing(Item):
 	def getSize(self):
 		return self.size
 
-	def __str__(self, opt=0):	# 1 for printing in block form, 11 for block form with comments, 01 for line form with comments, anything else for printing in line form (more options implementable later)
-		if opt == 1:	# block print
+	def __str__(self, opt=10):	# 20 for printing in block form, 21 for block form with comments, 11 for line form with comments, anything else for printing in line form (more options implementable later)
+		if opt == 20:	# block print
 			s = ("ID: " + str(self.idNum) + "\nType: " + str(self.article) + "\nSize: " + str(self.size))
 			if not (self.gender == None):
 				s += "\nGender: " + str(self.gender)
@@ -121,7 +121,7 @@ class Clothing(Item):
 			if self.isFie():
 				s += "\nFIE Quality"
 				
-		elif opt == 11:	# block print with comments
+		elif opt == 21:	# block print with comments
 			s = ("ID: " + str(self.idNum) + "\nType: " + str(self.article) + "\nSize: " + str(self.size))
 			if not (self.gender == None):
 				s += "\nGender: " + str(self.gender)
@@ -137,7 +137,7 @@ class Clothing(Item):
 			if self.areComments():
 				s += "\nComments: " + self.comments
 				
-		elif opt == 01:	# line form with comments
+		elif opt == 11:	# line form with comments
 			s = str(self.idNum) + " | " + str(self.article) + " | " + str(self.size) + " | "
 			if not (self.gender == None):
 				s += str(self.gender) + " | "
@@ -199,8 +199,8 @@ class Weapon(Item):
 	def getGrip(self):
 		return self.grip
 	
-	def __str__(self, opt=0):	# 1 for printing in block form, 11 for block form with comments, 01 for line form with comments, anything else for printing in line form (more options implementable later)
-		if opt == 1:	# block print
+	def __str__(self, opt=10):	# 20 for printing in block form, 21 for block form with comments, 11 for line form with comments, anything else for printing in line form (more options implementable later)
+		if opt == 20:	# block print
 			s = ("ID: " + str(self.idNum) + "\nType: " + str(self.article) + "\nHand: " + str(self.hand) + "\nGrip: " + str(self.grip) +
 				"\nBlade Condition: " + str(self.condition) + "\nWire Condition: " + str(self.wireCond) + "\nBell Condition: " + str(self.bellCond))
 			if self.user == None:
@@ -210,7 +210,7 @@ class Weapon(Item):
 			if self.isFie():
 				s += "\nFIE Quality"
 				
-		elif opt == 11:		# block print with comments
+		elif opt == 21:		# block print with comments
 			s = ("ID: " + str(self.idNum) + "\nType: " + str(self.article) + "\nHand: " + str(self.hand) + "\nGrip: " + str(self.grip) +
 				"\nBlade Condition: " + str(self.condition) + "\nWire Condition: " + str(self.wireCond) + "\nBell Condition: " + str(self.bellCond))
 			if self.user == None:
@@ -222,7 +222,7 @@ class Weapon(Item):
 			if self.areComments():
 				s += "\nComments: " + self.comments
 				
-		elif opt == 01:		# line form with comments
+		elif opt == 11:		# line form with comments
 			s = str(self.idNum) + " | " + str(self.article) + " | " + str(self.hand) + " | " + str(self.grip) + " | " + self.condition + " | " + self.wireCond + " | " + self.bellCond
 			if not (self.user == None):
 				s += " | " + str(self.user)
@@ -292,16 +292,16 @@ class MiscItem:
 		else:
 			return True
 		
-	def __str__(self, opt=0):	# 1 for printing in block form, 11 for block form with comments, 01 for line form with comments, anything else for printing in line form (more options implementable later)
-		if opt == 1:	# block print
+	def __str__(self, opt=10):	# 20 for printing in block form, 21 for block form with comments, 11 for line form with comments, anything else for printing in line form (more options implementable later)
+		if opt == 20:	# block print
 			s = "Item: " + str(self.name) + "\nQuantity: " + str(self.quantity)
 				
-		elif opt == 11:		# block print with comments
+		elif opt == 21:		# block print with comments
 			s = "Item: " + str(self.name) + "\nQuantity: " + str(self.quantity)
 			if self.areComments():
 				s += "\nComments: " + self.comments
 				
-		elif opt == 01:		# line form with comments
+		elif opt == 11:		# line form with comments
 			s = str(self.name) + " | " + str(self.quantity)
 			if self.areComments():
 				s += " | " + self.comments
