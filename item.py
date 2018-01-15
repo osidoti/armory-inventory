@@ -6,21 +6,43 @@ Basic classes for items stored in a fencing armory
 
 """
 params:
-int idNum
-str article
-str condition
-str hand (default to None)
-bool fie (default to False)
-str comments (default to empty string)
-str user (default to None)
+int idNum: The number on the ID of the given item
+int idYear: The last two digits of the year the item was first catalogued
+str article: The type of item it is (i.e. Jacket, Plastron, etc.)
+str condition: The condition of the item (ranging from excellent/new to very poor/broken)
+str hand (default to None): If the item is tailored for right- or left-handedness, note it
+bool fie (default to False): Boolean value for whether or not the item is marked as up to FIE competitive standards.
+str comments (default to empty string): any comments about the specific item (i.e. condition notes, location in armory, etc.)
+str user (default to None): Name of the fencer currently using the item
 
 Function:
 Generic superclass for a few shared types of functions and variables
+
+Class Functions:
+getArticle: returns str article property
+getUser: returns str user property
+addUser(newUser): replace str user property with str newUser
+removeUser: empty the user property, return str, most recent user
+getHand: returns str handedness of the item (None, if item has no handedness)
+getCondition: returns str condition of the item
+getID: returns str ID number for the item
+updateCondition(condition): replaces current str condition property with new str condition parameter
+isFie: returns boolean value of FIE competitive standard
+getComments: returns str comments property
+addComments(moreComments): appends str parameter moreComments on to str property comments after newline
+replaceComments(replace): replaces str property comments with str replace parameter
+delComments: removes all comments from item
+areComments: returns boolean representation of presence of comments
 """
 class Item:
-	def __init__(self, idNum, article, condition, hand=None, fie=False, comments="", user=None):
-		self.idNum = idNum
+	def __init__(self, idNum, idYear, article, condition, hand=None, fie=False, comments="", user=None):
+		self.idNum = int(idNum)
+		self.idYear = int(idYear)
 		self.article = article
+		if article[0] == "M" or article[0] == "L":
+			self.idLetter = article[0] + article[5]
+		else:
+			self.idLetter = article[0]
 		self.user = user
 		self.hand = hand
 		self.condition = condition
@@ -48,7 +70,8 @@ class Item:
 		return self.condition
 	
 	def getID(self):
-		return self.idNum
+		s = "OCFB" + str(self.idYear) + "-" + str(self.idLetter) + str(self.idNum)
+		return s
 	
 	def updateCondition(self, condition):
 		self.condition=condition
@@ -79,24 +102,35 @@ class Item:
 		
 """
 params:
-int idNum
-str article
-str condition
-str size
-str gender (default to None)
-str hand (default to None)
-bool fie (default to False)
-str comments (default to empty string)
-str user (default to None)
+int idNum: see superclass
+int idYear: see superclass
+str article: see superclass
+str condition: see superclass
+str size: The size of the piece of clothing (L, M, S, european or US measurements)
+str gender (default to None): If the piece of clothing is tailored for a specific gender, note it
+str hand (default to None): see superclass
+bool fie (default to False): see superclass
+str comments (default to empty string): see superclass
+str user (default to None): see superclass
 
 Function:
 Class for clothing and protective type items (jackets, knickers, masks, etc.)
 Contains a __str__ function for easy display with several options.
 Inherits from Item class
+
+Class Functions:
+All superclass functions (Item)
+getGender: retruns str gender the clothing item was tailored for
+getSize: returns str size of the clothing item
+__str__(opt): converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
+	-(opt=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
+	-(opt=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
+	-(opt=21) block print, with comments
+	-(opt=11) inline print, with comments
 """
 class Clothing(Item):
-	def __init__(self, idNum, article, condition, size, gender=None, hand=None, fie=False, comments="", user=None):
-		Item.__init__(idNum, article, condition, hand, fie, comments, user)
+	def __init__(self, idNum, idYear, article, condition, size, gender=None, hand=None, fie=False, comments="", user=None):
+		Item.__init__(idNum, idYear, article, condition, hand, fie, comments, user)
 		self.gender = gender
 		self.size = size
 		
@@ -108,7 +142,7 @@ class Clothing(Item):
 
 	def __str__(self, opt=10):	# 20 for printing in block form, 21 for block form with comments, 11 for line form with comments, anything else for printing in line form (more options implementable later)
 		if opt == 20:	# block print
-			s = ("ID: " + str(self.idNum) + "\nType: " + str(self.article) + "\nSize: " + str(self.size))
+			s = ("ID: " + self.getID() + "\nType: " + str(self.article) + "\nSize: " + str(self.size))
 			if not (self.gender == None):
 				s += "\nGender: " + str(self.gender)
 			if not (self.hand == None):
@@ -122,7 +156,7 @@ class Clothing(Item):
 				s += "\nFIE Quality"
 				
 		elif opt == 21:	# block print with comments
-			s = ("ID: " + str(self.idNum) + "\nType: " + str(self.article) + "\nSize: " + str(self.size))
+			s = ("ID: " + self.getID() + "\nType: " + str(self.article) + "\nSize: " + str(self.size))
 			if not (self.gender == None):
 				s += "\nGender: " + str(self.gender)
 			if not (self.hand == None):
@@ -138,7 +172,7 @@ class Clothing(Item):
 				s += "\nComments: " + self.comments
 				
 		elif opt == 11:	# line form with comments
-			s = str(self.idNum) + " | " + str(self.article) + " | " + str(self.size) + " | "
+			s = self.getID() + " | " + str(self.article) + " | " + str(self.size) + " | "
 			if not (self.gender == None):
 				s += str(self.gender) + " | "
 			if not (self.hand == None):
@@ -152,7 +186,7 @@ class Clothing(Item):
 				s += " | " + self.comments
 				
 		else:	# print in line form, for bulk items
-			s = str(self.idNum) + " | " + str(self.article) + " | " + str(self.size) + " | "
+			s = self.getID() + " | " + str(self.article) + " | " + str(self.size) + " | "
 			if not (self.gender == None):
 				s += str(self.gender) + " | "
 			if not (self.hand == None):
@@ -167,25 +201,37 @@ class Clothing(Item):
 			
 """
 params:
-int idNum
-str article
-str condition
-str hand
-str bellCond
-str wireCond
-str grip
-bool fie (default to False)
-str comments (default to empty string)
-str user (default to None)
+int idNum: see superclass
+int idYear: see superclass
+str article: see superclass
+str condition: see superclass
+str hand: Note which hand the weapon is set up for (left or right)
+str bellCond: The condition of the bell guard
+str grip: The type of grip placed on the weapon
+str wireCond (default to "N/A": The condition of the wire laid in the blade (if applicable)
+bool fie (default to False): see superclass
+str comments (default to empty string): see superclass
+str user (default to None): see superclass
 
 Function:
 Class for weapon type items (epees, foils, and sabres)
 Contains a __str__ function for easy display with several options.
 Inherits from Item class
+
+Class Functions:
+All superclass functions (Item)
+getBellCond: returns str bellCond property, detailing the condition of the bell guard
+getWireCond: returns str wireCond property, detailing the condition of the wire laid along the blade of the weapon
+getGrip: returns str grip property, detailing the type of grip on the weapon
+__str__(opt): converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
+	-(opt=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
+	-(opt=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
+	-(opt=21) block print, with comments
+	-(opt=11) inline print, with comments
 """
 class Weapon(Item):
-	def __init__(self, idNum, article, condition, hand, bellCond, wireCond, grip, fie=False, comments="", user=None):
-		Item.__init__(idNum, article, condition, hand, fie, comments, user)
+	def __init__(self, idNum, idYear, article, condition, hand, bellCond, grip, wireCond="N/A", fie=False, comments="", user=None):
+		Item.__init__(idNum, idYear, article, condition, hand, fie, comments, user)
 		self.bellCond = bellCond
 		self.wireCond = wireCond
 		self.grip = grip
@@ -199,9 +245,13 @@ class Weapon(Item):
 	def getGrip(self):
 		return self.grip
 	
+	def getID(self):
+		s = "OC" + str(self.idYear) + "-W" + str(self.idNum)
+		return s
+	
 	def __str__(self, opt=10):	# 20 for printing in block form, 21 for block form with comments, 11 for line form with comments, anything else for printing in line form (more options implementable later)
 		if opt == 20:	# block print
-			s = ("ID: " + str(self.idNum) + "\nType: " + str(self.article) + "\nHand: " + str(self.hand) + "\nGrip: " + str(self.grip) +
+			s = ("ID: " + self.getID() + "\nType: " + str(self.article) + "\nHand: " + str(self.hand) + "\nGrip: " + str(self.grip) +
 				"\nBlade Condition: " + str(self.condition) + "\nWire Condition: " + str(self.wireCond) + "\nBell Condition: " + str(self.bellCond))
 			if self.user == None:
 				s += "\nNot currently in use"
@@ -211,7 +261,7 @@ class Weapon(Item):
 				s += "\nFIE Quality"
 				
 		elif opt == 21:		# block print with comments
-			s = ("ID: " + str(self.idNum) + "\nType: " + str(self.article) + "\nHand: " + str(self.hand) + "\nGrip: " + str(self.grip) +
+			s = ("ID: " + self.getID() + "\nType: " + str(self.article) + "\nHand: " + str(self.hand) + "\nGrip: " + str(self.grip) +
 				"\nBlade Condition: " + str(self.condition) + "\nWire Condition: " + str(self.wireCond) + "\nBell Condition: " + str(self.bellCond))
 			if self.user == None:
 				s += "\nNot currently in use"
@@ -223,7 +273,7 @@ class Weapon(Item):
 				s += "\nComments: " + self.comments
 				
 		elif opt == 11:		# line form with comments
-			s = str(self.idNum) + " | " + str(self.article) + " | " + str(self.hand) + " | " + str(self.grip) + " | " + self.condition + " | " + self.wireCond + " | " + self.bellCond
+			s = self.getID() + " | " + str(self.article) + " | " + str(self.hand) + " | " + str(self.grip) + " | " + self.condition + " | " + self.wireCond + " | " + self.bellCond
 			if not (self.user == None):
 				s += " | " + str(self.user)
 			if self.isFie():
@@ -232,7 +282,7 @@ class Weapon(Item):
 				s += " | " + self.comments
 				
 		else:	# print in line form, for bulk items
-			s = str(self.idNum) + " | " + str(self.article) + " | " + str(self.hand) + " | " + str(self.grip) + " | " + self.condition + " | " + self.wireCond + " | " + self.bellCond
+			s = self.getID() + " | " + str(self.article) + " | " + str(self.hand) + " | " + str(self.grip) + " | " + self.condition + " | " + self.wireCond + " | " + self.bellCond
 			if not (self.user == None):
 				s += " | " + str(self.user)
 			if self.isFie():
@@ -248,7 +298,28 @@ str comments (default to empty string): any comments about the specific item (i.
 
 Function:
 Simple Class for miscellaneous other items found around the armory which it may be useful to catalog
-Contains a __str__ function for easy display with several options.
+Contains a __str__ function for easy display with several options:
+	-block print, where the item's properties are printed in block form with each property seaprated by a newline and title
+	-inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
+	-block print, with comments
+	-inline print, with comments
+	
+Class Functions:
+getName: returns str name property, with name of the item
+getQuantity: returns int quantity property, with quantity of the item
+changeQuantity(newQ): replaces current int quantity property with int newQ parameter
+addTo: increment quantity property
+subFrom: decrement quantity property
+getComments: returns str comments property
+addComments(moreComments): appends str parameter moreComments on to str property comments after newline
+replaceComments(replace): replaces str property comments with str replace parameter
+delComments: removes all comments from item
+areComments: returns boolean representation of presence of comments
+__str__(opt): converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
+	-(opt=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
+	-(opt=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
+	-(opt=21) block print, with comments
+	-(opt=11) inline print, with comments
 """
 class MiscItem:
 	def __init__(self, name, quantity=1, comments=""):
