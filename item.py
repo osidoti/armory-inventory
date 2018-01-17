@@ -25,6 +25,9 @@ addUser(newUser): replace str user property with str newUser
 removeUser: empty the user property, return str, most recent user
 getHand: returns str handedness of the item (None, if item has no handedness)
 getCondition: returns str condition of the item
+getNum: returns int idNum property
+getYear: returns int idYear property
+getLetter: returns str idLetter property
 getID: returns str ID number for the item
 updateCondition(condition): replaces current str condition property with new str condition parameter
 isFie: returns boolean value of FIE competitive standard
@@ -33,6 +36,8 @@ addComments(moreComments): appends str parameter moreComments on to str property
 replaceComments(replace): replaces str property comments with str replace parameter
 delComments: removes all comments from item
 areComments: returns boolean representation of presence of comments
+newPrintForm(newP): replaces the int printForm property with int newP parameter
+resetPrintForm: if property printForm != 10, sets it to 10. Returns 1 if changed, 0 if unchanged.
 """
 class Item:
 	def __init__(self, idNum, idYear, article, condition, hand=None, fie=False, comments="", user=None):
@@ -48,6 +53,7 @@ class Item:
 		self.condition = condition
 		self.fie = fie
 		self.comments = comments
+		self.printForm = 10	# 20 for printing in block form, 21 for block form with comments, 11 for line form with comments, anything else for printing in line form (more options implementable later)
 		
 	def getArticle(self):
 		return self.article
@@ -68,6 +74,15 @@ class Item:
 	
 	def getCondition(self):
 		return self.condition
+	
+	def getNum(self):
+		return self.idNum
+	
+	def getYear(self):
+		return self.idYear
+	
+	def getLetter(self):
+		return self.idLetter
 	
 	def getID(self):
 		s = "OCFB" + str(self.idYear) + "-" + str(self.idLetter) + str(self.idNum)
@@ -100,6 +115,17 @@ class Item:
 		else:
 			return True
 		
+	def newPrintForm(self, newP):
+		self.printForm = newP
+		
+	def resetPrintForm(self):
+		if self.printForm != 10:
+			self.printForm = 10
+			return 1
+		else:
+			return 0
+		
+		
 """
 params:
 int idNum: see superclass
@@ -122,15 +148,15 @@ Class Functions:
 All superclass functions (Item)
 getGender: retruns str gender the clothing item was tailored for
 getSize: returns str size of the clothing item
-__str__(opt): converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
-	-(opt=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
-	-(opt=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
-	-(opt=21) block print, with comments
-	-(opt=11) inline print, with comments
+__str__: converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
+	-(printForm=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
+	-(printForm=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
+	-(printForm=21) block print, with comments
+	-(printForm=11) inline print, with comments
 """
 class Clothing(Item):
 	def __init__(self, idNum, idYear, article, condition, size, gender=None, hand=None, fie=False, comments="", user=None):
-		Item.__init__(idNum, idYear, article, condition, hand, fie, comments, user)
+		Item.__init__(self, idNum, idYear, article, condition, hand, fie, comments, user)
 		self.gender = gender
 		self.size = size
 		
@@ -140,8 +166,8 @@ class Clothing(Item):
 	def getSize(self):
 		return self.size
 
-	def __str__(self, opt=10):	# 20 for printing in block form, 21 for block form with comments, 11 for line form with comments, anything else for printing in line form (more options implementable later)
-		if opt == 20:	# block print
+	def __str__(self):
+		if self.printForm == 20:	# block print
 			s = ("ID: " + self.getID() + "\nType: " + str(self.article) + "\nSize: " + str(self.size))
 			if not (self.gender == None):
 				s += "\nGender: " + str(self.gender)
@@ -154,8 +180,9 @@ class Clothing(Item):
 				s += "\nUser: " + str(self.user)
 			if self.isFie():
 				s += "\nFIE Quality"
+			s += "\n"
 				
-		elif opt == 21:	# block print with comments
+		elif self.printForm == 21:	# block print with comments
 			s = ("ID: " + self.getID() + "\nType: " + str(self.article) + "\nSize: " + str(self.size))
 			if not (self.gender == None):
 				s += "\nGender: " + str(self.gender)
@@ -170,8 +197,9 @@ class Clothing(Item):
 				s += "\nFIE Quality"
 			if self.areComments():
 				s += "\nComments: " + self.comments
+			s += "\n"
 				
-		elif opt == 11:	# line form with comments
+		elif self.printForm == 11:	# line form with comments
 			s = self.getID() + " | " + str(self.article) + " | " + str(self.size) + " | "
 			if not (self.gender == None):
 				s += str(self.gender) + " | "
@@ -223,15 +251,15 @@ All superclass functions (Item)
 getBellCond: returns str bellCond property, detailing the condition of the bell guard
 getWireCond: returns str wireCond property, detailing the condition of the wire laid along the blade of the weapon
 getGrip: returns str grip property, detailing the type of grip on the weapon
-__str__(opt): converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
-	-(opt=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
-	-(opt=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
-	-(opt=21) block print, with comments
-	-(opt=11) inline print, with comments
+__str__: converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
+	-(printForm=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
+	-(printForm=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
+	-(printForm=21) block print, with comments
+	-(printForm=11) inline print, with comments
 """
 class Weapon(Item):
 	def __init__(self, idNum, idYear, article, condition, hand, bellCond, grip, wireCond, fie=False, comments="", user=None):
-		Item.__init__(idNum, idYear, article, condition, hand, fie, comments, user)
+		Item.__init__(self, idNum, idYear, article, condition, hand, fie, comments, user)
 		self.bellCond = bellCond
 		self.wireCond = wireCond
 		self.grip = grip
@@ -249,8 +277,8 @@ class Weapon(Item):
 		s = "OC" + str(self.idYear) + "-W" + str(self.idNum)
 		return s
 	
-	def __str__(self, opt=10):	# 20 for printing in block form, 21 for block form with comments, 11 for line form with comments, anything else for printing in line form (more options implementable later)
-		if opt == 20:	# block print
+	def __str__(self):
+		if self.printForm == 20:	# block print
 			s = ("ID: " + self.getID() + "\nType: " + str(self.article) + "\nHand: " + str(self.hand) + "\nGrip: " + str(self.grip) +
 				"\nBlade Condition: " + str(self.condition) + "\nWire Condition: " + str(self.wireCond) + "\nBell Condition: " + str(self.bellCond))
 			if self.user == None:
@@ -259,8 +287,9 @@ class Weapon(Item):
 				s += "\nUser: " + str(self.user)
 			if self.isFie():
 				s += "\nFIE Quality"
+			s += "\n"
 				
-		elif opt == 21:		# block print with comments
+		elif self.printForm == 21:		# block print with comments
 			s = ("ID: " + self.getID() + "\nType: " + str(self.article) + "\nHand: " + str(self.hand) + "\nGrip: " + str(self.grip) +
 				"\nBlade Condition: " + str(self.condition) + "\nWire Condition: " + str(self.wireCond) + "\nBell Condition: " + str(self.bellCond))
 			if self.user == None:
@@ -271,8 +300,9 @@ class Weapon(Item):
 				s += "\nFIE Quality"
 			if self.areComments():
 				s += "\nComments: " + self.comments
+			s += "\n"
 				
-		elif opt == 11:		# line form with comments
+		elif self.printForm == 11:		# line form with comments
 			s = self.getID() + " | " + str(self.article) + " | " + str(self.hand) + " | " + str(self.grip) + " | " + self.condition + " | " + self.wireCond + " | " + self.bellCond
 			if not (self.user == None):
 				s += " | " + str(self.user)
@@ -315,17 +345,20 @@ addComments(moreComments): appends str parameter moreComments on to str property
 replaceComments(replace): replaces str property comments with str replace parameter
 delComments: removes all comments from item
 areComments: returns boolean representation of presence of comments
-__str__(opt): converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
-	-(opt=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
-	-(opt=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
-	-(opt=21) block print, with comments
-	-(opt=11) inline print, with comments
+newPrintForm(newP): replaces the int printForm property with int newP parameter
+resetPrintForm: if property printForm != 10, sets it to 10. Returns 1 if changed, 0 if unchanged.
+__str__: converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
+	-(printForm=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
+	-(printForm=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
+	-(printForm=21) block print, with comments
+	-(printForm=11) inline print, with comments
 """
 class MiscItem:
 	def __init__(self, name, quantity=1, comments=""):
 		self.name = name
 		self.quantity = quantity
 		self.comments = comments
+		self.printForm = 10	# 20 for printing in block form, 21 for block form with comments, 11 for line form with comments, anything else for printing in line form (more options implementable later)
 		
 	def getName(self):
 		return self.name
@@ -363,16 +396,27 @@ class MiscItem:
 		else:
 			return True
 		
-	def __str__(self, opt=10):	# 20 for printing in block form, 21 for block form with comments, 11 for line form with comments, anything else for printing in line form (more options implementable later)
-		if opt == 20:	# block print
-			s = "Item: " + str(self.name) + "\nQuantity: " + str(self.quantity)
+	def newPrintForm(self, newP):
+		self.printForm = newP
+		
+	def resetPrintForm(self):
+		if self.printForm != 10:
+			self.printForm = 10
+			return 1
+		else:
+			return 0
+		
+	def __str__(self):
+		if self.printForm == 20:	# block print
+			s = "Item: " + str(self.name) + "\nQuantity: " + str(self.quantity) + "\n"
 				
-		elif opt == 21:		# block print with comments
+		elif self.printForm == 21:		# block print with comments
 			s = "Item: " + str(self.name) + "\nQuantity: " + str(self.quantity)
 			if self.areComments():
 				s += "\nComments: " + self.comments
+			s += "\n"
 				
-		elif opt == 11:		# line form with comments
+		elif self.printForm == 11:		# line form with comments
 			s = str(self.name) + " | " + str(self.quantity)
 			if self.areComments():
 				s += " | " + self.comments

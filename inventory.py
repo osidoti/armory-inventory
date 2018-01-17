@@ -7,6 +7,8 @@ Main module for the Flaming Blades Inventory
 import item
 import sys
 import time
+import os
+import errno
 
 # add a single item, taking user input for each property
 def addItem(invn):
@@ -15,7 +17,7 @@ def addItem(invn):
 	if c == 1:	# clothing, items
 		idNum = int(input("ID Number: "))
 		idYear = int(input("Last two digits of catalogue year: "))
-		article = str(input("Article of clothing (Jacket, Lame, Foil, etc.): "))
+		article = str(input("Article of clothing ('Jacket', 'Lame, Foil', 'Knickers', etc.): "))
 		size = str(input("Size: "))
 		condition = str(input("Condition: "))
 		c = str(input("Are there additional traits that you would like to note (y/n)? "))
@@ -42,7 +44,7 @@ def addItem(invn):
 				user = None
 			c = str(input("Do you have additional comments for this " + article + " (y/n)? "))
 			if c.lower() == "y":
-				comments = str(input("Comments (enter '\\n' to separate lines in a comment): "))
+				comments = str(input("Comments: "))
 			else:
 				comments = ""
 			newI = item.Clothing(idNum, idYear, article, condition, size, gender, hand, fie, comments, user)
@@ -77,7 +79,7 @@ def addItem(invn):
 				user = None
 			c = str(input("Do you have additional comments for this " + article + " (y/n)? "))
 			if c.lower() == "y":
-				comments = str(input("Comments (enter '\\n' to separate lines in a comment): "))
+				comments = str(input("Comments: "))
 			else:
 				comments = ""
 			newI = item.Weapon(idNum, idYear, article, condition, hand, bellCond, grip, wireCond, fie, comments, user)
@@ -92,7 +94,7 @@ def addItem(invn):
 			quantity = int(input("Quantity of the item: "))
 			c = str(input("Do you have comments (y/n)? "))
 			if c.lower() == "y":
-				comments = str(input("Comments (enter '\\n' to separate lines in a comment): "))
+				comments = str(input("Comments: "))
 			else:
 				comments = ""
 			newM = item.MiscItem(name, quantity, comments)
@@ -108,9 +110,27 @@ def addItem(invn):
 def delItem(invn):
 	pass
 
-# search for all items matching search parameters (user input in function)
-def search(invn):
+# search for all items matching search parameters (internal, system-use, helper function)
+def helpSearch(invn):
 	pass
+
+# search for all items matching search parameters (user input in function)
+def userSearch(invn):
+	# choose search parameters
+	s_param = 0
+	in_use = False	# check if user wants to find clothes in use or not in use
+	res_list = []
+	if s_param == 0:	# idNum search
+		# choose search number, search year (possibly parse text input of full id)
+		s_num = 0
+		s_year = 0
+		s_letter = "A"
+		for i in invn["items"]:
+			if (i.getNum() == s_num) and (i.getYear() == s_year) and (i.getLetter() == s_letter):
+				res_list.append(i)
+	elif s_param == 1:	# size search
+		# check if gender included
+		pass
 
 # load and initialize the inventory from a save file, if one exists
 def loadInv(invn):
@@ -118,7 +138,8 @@ def loadInv(invn):
 
 # save the inventory to a file (consider finding a way to compress size to ensure compactness of the file)
 def saveInv(invn):
-	pass
+	fName = strftime("invn_%m-%d-%y_%X.sav")
+	return 0
 
 # keep the number of saves in check (maybe more features, like autosaving after x amount of time)
 def maintainSaves(invn):
@@ -134,6 +155,10 @@ def delBatch(invn):
 
 # list all items of a given type (i.e. Jackets, Plastra, Foils, etc.) or whole inventory
 def listItems(invn):
+	pass
+
+# generate the next available ID number for a new item to add to the inventory (this will likely be a very involved method)
+def genNextID(invn, article):
 	pass
 
 def main():
@@ -162,7 +187,7 @@ def main():
 			delBatch(invn)
 		elif c == 5:	# search for item(s)
 			print("\nSEARCH\n")
-			search(invn)
+			userSearch(invn)
 		elif c == 6:	# list items
 			print("\nLIST ITEMS\n")
 			listItems(invn)
