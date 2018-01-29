@@ -108,7 +108,23 @@ def addItem(invn):
 
 # delete a single item, identified by ID (idNum, idYear, idLetter)
 def delItem(invn):
-	pass
+	serial_num = str(input("Enter the full serial code for the item to delete: "))
+	serial_parts = parseSerial(serial_num)
+	# grab item index by searching for serial num
+	# delete list index
+	
+# helper method to parse a full serial code into year, letter, num
+def parseSerial(serial_num):
+	year = int(serial_num[4:5])
+	back_half = serial_num[7:]
+	if back_half[1].isdigit():
+		num = int(back_half[1:])
+		letter = str(back_half[0])
+	else:
+		num = int(back_half[2:])
+		letter = str(back_half[0:1])
+		
+	return (year, letter, num)
 
 # search for all items matching search parameters (internal, system-use, helper function)
 def helpSearch(invn):
