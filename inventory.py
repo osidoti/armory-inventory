@@ -51,7 +51,7 @@ def addItem(invn):
 		else:
 			newI = item.Clothing(idNum, idYear, article, condition, size)
 			
-		invn['items'].append(newI)
+		invn['items'['clothes']].append(newI)
 		
 	elif c == 2:	# weapon, items
 		idNum = int(input("ID Number: "))
@@ -86,7 +86,7 @@ def addItem(invn):
 		else:
 			newI = item.Weapon(idNum, idYear, article, condition, hand, bellCond, grip, wireCond)
 			
-		invn['items'].append(newI)
+		invn['items'['weapons']].append(newI)
 	elif c == 3:	# miscItem, misc
 		name = str(input("Name the item (wire, saw, etc.): "))
 		c = str(input("Are there more than 1 of this item or do you have comments for this item (y/n)? "))
@@ -170,8 +170,21 @@ def delBatch(invn):
 	pass
 
 # list all items of a given type (i.e. Jackets, Plastra, Foils, etc.) or whole inventory
-def listItems(invn):
-	pass
+def listItems(invn, category=0, itemType=None):
+	if category == 0:
+		l = invn['items':['clothes']]
+	elif category == 1:
+		l = invn['items':['weapons']]
+	else:
+		l = invn['misc']
+	
+	if itemType == None:
+		for i in l:
+			print(i)
+	else:
+		for i in l:
+			if i.getattr(itemType):
+				pass
 
 # generate the next available ID number for a new item to add to the inventory (this will likely be a very involved method)
 def genNextID(invn, article):
@@ -182,7 +195,7 @@ def main():
 	
 	print("\nWelcome to the Oberlin College Flaming Blades Armory Inventory System (OCFBAIS)!\n")
 	
-	invn = {'items':[], 'misc':[]}	# each list in dictionary holds only corresponding type of object (from item.py)
+	invn = {'items':{'clothes':[], 'weapons':[]}, 'misc':[]}	# each list in dictionary holds only corresponding type of object (from item.py)
 	
 	# open and load most recent inventory file
 	
