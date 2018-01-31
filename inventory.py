@@ -221,21 +221,27 @@ def main():
 	
 	# open and load most recent inventory file
 	
+	save_updated = True
+	
 	while not exStat:	# user input loop
 		print("\nOptions:\n1 - Add an Item\n2 - Remove an Item\n3 - Add a batch of Items\n4 - Remove a batch of Items\n5 - Search for an Item(s)\n6 - List Items\n7 - Save current inventory\n8 - Quit")	# detail available options for user
 		c = int(input("\nPlease choose an option: "))
 		if c == 1:	# add single item
 			print("\nADD ITEM\n")
 			addItem(invn)
+			save_updated = False
 		elif c == 2:	# remove single item
 			print("\nREMOVE ITEM\n")
 			delItem(invn)
+			save_updated = False
 		elif c == 3:	# add batch of items
 			print("\nADD BATCH ITEMS\n")
 			addBatch(invn)
+			save_updated = False
 		elif c == 4:	# remove batch of items
 			print("\nREMOVE BATCH ITEMS\n")
 			delBatch(invn)
+			save_updated = False
 		elif c == 5:	# search for item(s)
 			print("\nSEARCH\n")
 			userSearch(invn)
@@ -247,14 +253,27 @@ def main():
 			savStat = saveInv(invn)
 			if savStat == 0:
 				print("Inventory saved successfully!")
+				save_updated = True
 			else:	# include possible error messages with return values in saveInv() method
 				print("Something went wrong, save aborted.")
 		elif c == 8:	# exit
-			v = False
-			if v == True:	# perform some check for unsaved changes to inventory
+			if save_updated == False:	# check for unsaved changes to inventory
 				qC = str(input("There are unsaved changes to the inventory, are you sure you want to quit (y/n)? "))
 				if qC.lower() == "y":
 					exStat = True
+				else:
+					qC = str(input("Save changes, then quit (y/n)? "))
+					if qC.lower() == "n":
+						exStat = False
+					else:
+						savStat = saveInv(invn)
+						if savStat == 0:
+							print("Inventory saved successfully!")
+							save_updated = True
+							exStat = True
+						else:	# include possible error messages with return values in saveInv() method
+							print("Something went wrong, save aborted.")
+						
 			else:
 				exStat = True
 		else:
