@@ -51,7 +51,7 @@ def addItem(invn):
 		else:
 			newI = item.Clothing(idNum, idYear, article, condition, size)
 			
-		invn['items'['clothes']].append(newI)
+		invn['items']['clothes'].append(newI)
 		
 	elif c == 2:	# weapon, items
 		idNum = int(input("ID Number: "))
@@ -86,7 +86,7 @@ def addItem(invn):
 		else:
 			newI = item.Weapon(idNum, idYear, article, condition, hand, bellCond, grip, wireCond)
 			
-		invn['items'['weapons']].append(newI)
+		invn['items']['weapons'].append(newI)
 	elif c == 3:	# miscItem, misc
 		name = str(input("Name the item (wire, saw, etc.): "))
 		c = str(input("Are there more than 1 of this item or do you have comments for this item (y/n)? "))
@@ -166,11 +166,11 @@ def saveInv(invn):
 		f.write(fName + "\n")
 		f.write("TD,")	# top dict
 		f.write("C\n")
-		for i in invn['items'['clothes']]:
+		for i in invn['items']['clothes']:
 			sav_dat = i.compileSaveData()
 			f.write(sav_dat + "\n")
 		f.write("W\n")
-		for i in invn['items'['weapons']]:
+		for i in invn['items']['weapons']:
 			sav_dat = i.compileSaveData()
 			f.write(sav_dat + "\n")
 		f.write("M\n")
@@ -194,9 +194,9 @@ def delBatch(invn):
 # list all items of a given type (i.e. Jackets, Plastra, Foils, etc.) or whole inventory
 def listItems(invn, category=0, itemType=None):
 	if category == 0:
-		l = invn['items'['clothes']]
+		l = invn['items']['clothes']
 	elif category == 1:
-		l = invn['items'['weapons']]
+		l = invn['items']['weapons']
 	else:
 		l = invn['misc']
 	
