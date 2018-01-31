@@ -148,6 +148,7 @@ Class Functions:
 All superclass functions (Item)
 getGender: retruns str gender the clothing item was tailored for
 getSize: returns str size of the clothing item
+compileSaveData: compiles all properties of an item into a saveable, csv format and returns.
 __str__: converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
 	-(printForm=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
 	-(printForm=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
@@ -165,6 +166,22 @@ class Clothing(Item):
 	
 	def getSize(self):
 		return self.size
+	
+	def compileSaveData(self):
+		s = str(self.idNum) + ","
+		s += str(self.idYear) + ","
+		s += str(self.article) + ","
+		s += str(self.condition) + ","
+		s += str(self.size) + ","
+		s += str(self.gender) + ","
+		s += str(self.hand) + ","
+		if self.fie == True:
+			s += "T,"
+		else:
+			s += "F,"
+		s += str(self.comments) + ","
+		s += str(self.user)
+		return s
 
 	def __str__(self):
 		if self.printForm == 20:	# block print
@@ -251,6 +268,7 @@ All superclass functions (Item)
 getBellCond: returns str bellCond property, detailing the condition of the bell guard
 getWireCond: returns str wireCond property, detailing the condition of the wire laid along the blade of the weapon
 getGrip: returns str grip property, detailing the type of grip on the weapon
+compileSaveData: compiles all properties of an item into a saveable, csv format and returns.
 __str__: converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
 	-(printForm=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
 	-(printForm=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
@@ -275,6 +293,23 @@ class Weapon(Item):
 	
 	def getID(self):
 		s = "OC" + str(self.idYear) + "-W" + str(self.idNum)
+		return s
+	
+	def compileSaveData(self):
+		s = str(self.idNum) + ","
+		s += str(self.idYear) + ","
+		s += str(self.article) + ","
+		s += str(self.condition) + ","
+		s += str(self.hand) + ","
+		s += str(self.bellCond) + ","
+		s += str(self.grip) + ","
+		s += str(self.wireCond) + ","
+		if self.fie == True:
+			s += "T,"
+		else:
+			s += "F,"
+		s += str(self.comments) + ","
+		s += str(self.user)
 		return s
 	
 	def __str__(self):
@@ -347,6 +382,7 @@ delComments: removes all comments from item
 areComments: returns boolean representation of presence of comments
 newPrintForm(newP): replaces the int printForm property with int newP parameter
 resetPrintForm: if property printForm != 10, sets it to 10. Returns 1 if changed, 0 if unchanged.
+compileSaveData: compiles all properties of an item into a saveable, csv format and returns.
 __str__: converts item and properties to a printable format for a print statement. Has the following options (chosen by the int opt param, defaulting to 10):
 	-(printForm=20) block print, where the item's properties are printed in block form with each property seaprated by a newline and title
 	-(printForm=10) inline print, where the item's properties are printed without newline separation, but instead seaprated by " | "
@@ -405,6 +441,12 @@ class MiscItem:
 			return 1
 		else:
 			return 0
+	
+	def compileSaveData(self):
+		s = str(self.name) + ","
+		s += str(self.quantity) + ","
+		s += str(self.comments)
+		return s
 		
 	def __str__(self):
 		if self.printForm == 20:	# block print

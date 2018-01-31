@@ -154,7 +154,29 @@ def loadInv(invn):
 
 # save the inventory to a file (consider finding a way to compress size to ensure compactness of the file)
 def saveInv(invn):
+	sav_path = "/invn_saves"
+	if not os.path.exists(sav_path):
+		try:
+			os.mkdir(sav_path)
+		except Exception as e:
+			print("Something went wrong: " + str(e))
 	fName = strftime("invn_%m-%d-%y_%X.sav")
+	with open(sav_path + fName) as f:
+		# format all necessary data for saving
+		f.write(fName + "\n")
+		f.write("TD,")	# top dict
+		f.write("C\n")
+		for i in invn['items'['clothes']]:
+			sav_dat = i.compileSaveData()
+			f.write(sav_dat + "\n")
+		f.write("W\n")
+		for i in invn['items'['weapons']]:
+			sav_dat = i.compileSaveData()
+			f.write(sav_dat + "\n")
+		f.write("M\n")
+		for i in invn['misc']:
+			sav_dat = i.compileSaveData()
+			f.write(sav_dat + "\n")
 	return 0
 
 # keep the number of saves in check (maybe more features, like autosaving after x amount of time)
@@ -172,9 +194,9 @@ def delBatch(invn):
 # list all items of a given type (i.e. Jackets, Plastra, Foils, etc.) or whole inventory
 def listItems(invn, category=0, itemType=None):
 	if category == 0:
-		l = invn['items':['clothes']]
+		l = invn['items'['clothes']]
 	elif category == 1:
-		l = invn['items':['weapons']]
+		l = invn['items'['weapons']]
 	else:
 		l = invn['misc']
 	
