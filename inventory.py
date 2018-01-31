@@ -154,14 +154,14 @@ def loadInv(invn):
 
 # save the inventory to a file (consider finding a way to compress size to ensure compactness of the file)
 def saveInv(invn):
-	sav_path = "/invn_saves"
+	sav_path = "./invn_saves"
 	if not os.path.exists(sav_path):
 		try:
 			os.mkdir(sav_path)
 		except Exception as e:
 			print("Something went wrong: " + str(e))
-	fName = strftime("invn_%m-%d-%y_%X.sav")
-	with open(sav_path + fName) as f:
+	fName = time.strftime("invn_%m-%d-%y_%X.sav")
+	with open(sav_path + "/" + fName, 'w') as f:
 		# format all necessary data for saving
 		f.write(fName + "\n")
 		f.write("TD,")	# top dict
