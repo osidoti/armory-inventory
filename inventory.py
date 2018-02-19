@@ -149,19 +149,58 @@ def userSearch(invn):
 		pass
 
 # load and initialize the inventory from a save file, if one exists
+# return codes:
+# 0 for success
+# -1 for no existing inventory, no desire for new inventory (i.e. exit program)
+# 1 for no existing inventory, yes to starting a new inventory
+# 2 for Error during directory change
 def loadInv(invn):
-	pass
+	cwdir = os.getcwd()
+	sav_path = cwdir + "/invn_saves"
+	try:
+		os.chdir(sav_path)
+	except OSError(ENOENT):
+		print("No preexisting inventory found.")
+		i = input("Start a new inventory (y/n)? ")
+		if i.lower() == "n":
+			return -1
+		else:
+			return 1
+	except Exception as e:
+		print("Error, something went wrong: " + str(e))
+		return 2
+	
+	# load most recent save heretry:
+		os.chdir(cwdir)
+	except Exception as e:
+		print("Error, could not return to original working directory: " + str(e))
+		return 2
+	return 0
+	
 
 # save the inventory to a file (consider finding a way to compress size to ensure compactness of the file)
+# return codes:
+# 0 for success
+# 1 for failure to create new save directory
+# 2 for failure to change directory
 def saveInv(invn):
-	sav_path = "./invn_saves"
+	cwdir = os.getcwd()
+	sav_path = cwdir + "/invn_saves"
 	if not os.path.exists(sav_path):
 		try:
 			os.mkdir(sav_path)
 		except Exception as e:
-			print("Something went wrong: " + str(e))
+			print("Error, could not create new save directory: " + str(e))
+			return 1
+	try:
+		os.chdir(sav_path)
+	except Exception as e:
+		print("Error, could not change directories to save: " + str(e))
+		return 2
 	fName = time.strftime("invn_%m-%d-%y_%X.sav")
-	with open(sav_path + "/" + fName, 'w') as f:
+	
+	# TODO: implement compression algorithm to reduce save data to bytecode
+	with open(fName, 'w') as f:
 		# format all necessary data for saving
 		f.write(fName + "\n")
 		f.write("TD,")	# top dict
@@ -177,6 +216,11 @@ def saveInv(invn):
 		for i in invn['misc']:
 			sav_dat = i.compileSaveData()
 			f.write(sav_dat + "\n")
+	try:
+		os.chdir(cwdir)
+	except Exception as e:
+		print("Error, could not return to original working directory: " + str(e))
+		return 2
 	return 0
 
 # keep the number of saves in check (maybe more features, like autosaving after x amount of time)
