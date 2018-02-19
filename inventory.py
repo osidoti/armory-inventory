@@ -3,12 +3,15 @@ Orion Sidoti
 inventory.py
 Main module for the Flaming Blades Inventory
 """
-
+# imports
 import item
 import sys
 import time
 import os
 import errno
+
+# Global constants
+MAX_SAVES = 10
 
 # add a single item, taking user input for each property
 def addItem(invn):
@@ -170,7 +173,9 @@ def loadInv(invn):
 		print("Error, something went wrong: " + str(e))
 		return 2
 	
-	# load most recent save heretry:
+	# load most recent save here
+	
+	try:
 		os.chdir(cwdir)
 	except Exception as e:
 		print("Error, could not return to original working directory: " + str(e))
@@ -224,8 +229,37 @@ def saveInv(invn):
 	return 0
 
 # keep the number of saves in check (maybe more features, like autosaving after x amount of time)
+# return codes:
+# -1 for no saves to check
+# 2 for error during directory change
 def maintainSaves(invn):
-	pass
+	cwdir = os.getcwd()
+	sav_path = cwdir + "/invn_saves"
+	try:
+		os.chdir(sav_path)
+	except OSError(ENOENT):
+		return -1
+	except Exception as e:
+		print("error, something went wrong: " + str(e))
+		return 2
+	sav_list = glob.glob('*.sav')
+	if len(sav_list) <= MAX_SAVES:
+		return 0
+	else:
+		del_file = getEstSave(sav_list, 1)
+		
+
+# helper method to determine the ___est save file
+# 2nd param: 0 for newest save, 1 for oldest save
+def getEstSave(save_list, age):
+	if len(save_list) == 1:
+		return save_list[0]
+	elif age == 0:
+		pass	# do more to find newest save file
+	elif age == 1:
+		pass	# do more to find oldest save file
+	else:
+		pass	# report error for bad params
 
 # add items in a batch, likely from csv file
 def addBatch(invn):
