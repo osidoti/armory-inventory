@@ -9,6 +9,7 @@ import sys
 import time
 import os
 import errno
+import operator
 
 # Global constants
 MAX_SAVES = 10
@@ -249,17 +250,26 @@ def maintainSaves(invn):
 		del_file = getEstSave(sav_list, 1)
 		
 
-# helper method to determine the ___est save file
+# helper method to determine the <old/new>est save file
+# 1st param: list of 1 or more file paths
 # 2nd param: 0 for newest save, 1 for oldest save
+# return codes:
+# -1 for bad 2nd param
 def getEstSave(save_list, age):
 	if len(save_list) == 1:
 		return save_list[0]
-	elif age == 0:
-		pass	# do more to find newest save file
-	elif age == 1:
-		pass	# do more to find oldest save file
 	else:
-		pass	# report error for bad params
+		saves_age = []
+		for i in save_list:
+			saves_age.append(i, os.path.getmtime(i))
+		if age == 0:	# find newest save
+			sorted(saves_age, key=operator.itemgetter(1), reverse=True)
+			return saves_age[0[0]]	# list is tuple of (path, modification time)
+		elif age == 1:	# find oldest save
+			sorted(saves_age, key=operator.itemgetter(1))
+			return saves_age[0[0]]	# list is tuple of (path, modification time)
+		else:
+			return -1
 
 # add items in a batch, likely from csv file
 def addBatch(invn):
